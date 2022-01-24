@@ -1,64 +1,99 @@
-#NumberGuessingGame
-#1/20/22
-
-#Guess the number to win the game
-
-from asyncio import events
-import os
 import random
-from typing import Counter
-os.system('cls')
-gameOn=True
+import os
+guessesTaken = 0  
+print("##################")
+print("                  ")
+print('What is your name?')
+print("                  ")
+myName = input() 
+print("                  ")
+print('Hello, ' + myName  )
+print("  Level 1: #1-10  ")
+print("  Level 2: #1-30  ")
+print("  Level 3: #1-50  ")
+print("                  ")
+gametype= int(input('Hello, ' + myName + ', Select a level:'))
+print("                  ")
+if gametype== 1:
+    number = randint(1, 10) 
+while guessesTaken < 5:
+  print("                  ")
+  print("You selected Level 1 (#1-10)")
+  print('Take a guess')
+  print("                  ")
+  guess = int(input())  
+  guessesTaken = guessesTaken + 1 
+  if guess < number:
+    print("                  ")
+    print('So sad! Too low.')
+    print("                  ")
+  if guess > number:
+    print("                  ")
+    print('So sad! Too high')
+    print("                  ")
+  if guess == number:
+    break
+if guess == number:
+  guessesTaken = str(guessesTaken)
+  print("                  ")
+  print('Aight- Good job, ' + myName + '! You guessed the correct number in ' + guessesTaken + ' guesses!')
+if guess != number:
+  number = str(number)
+  print("                  ")
+  print('Dude- you suck. Get it together. The number that I was thinking is ' + number)
 
-print("########################")
-print("# Guess a Number Menu #")
-userNumA=input("#1-10= A")
-userNumB=input("#1-20= B")
-userNumC=input("#1-50= C")
+if gametype== 2:
+    number = randint(1, 30) 
+while guessesTaken < 5:
+  print("                  ")
+  print("You selected Level 1 (#1-30)")
+  print('Take a guess')
+  print("                  ")
+  guess = int(input())  
+  guessesTaken = guessesTaken + 1 
+  if guess < number:
+    print("                  ")
+    print('So sad! Too low.')
+    print("                  ")
+  if guess > number:
+    print("                  ")
+    print('So sad! Too high')
+    print("                  ")
+  if guess == number:
+    break
+if guess == number:
+  guessesTaken = str(guessesTaken)
+  print("                  ")
+  print('Aight- Good job, ' + myName + '! You guessed the correct number in ' + guessesTaken + ' guesses!')
+if guess != number:
+  number = str(number)
+  print("                  ")
+  print('Dude- you suck. Get it together. The number that I was thinking is ' + number)
 
-while True:
-    prompt1=input('Select a level :').lower()
-
-    if prompt1 == 'A':
-       guess=random.randint(1,10)
-    userNumA=input("guess a number from 1-10 ")
-    while gameOn: 
-        userNumA=int(userNumA)
-        Counter = +1
-        if userNumA == guess:
-            print("Congratulations, you are smart")
-        else:
-            if userNumA > guess +1:
-                print("So sad, not so bright!")
-            else:
-                if userNumA < guess -1:
-                 print("So sad, too low!")
-    if prompt1 == 'B':
-        guess=random.randint(1,20)
-    userNumA=input("guess a number from 1-20 ")
-    while gameOn: 
-        userNumA=int(userNumA)
-        Counter = +1
-        if userNumA == guess:
-            print("Congratulations, you are smart")
-        else:
-            if userNumA > guess +5:
-                print("So sad, not so bright!")
-            else:
-                if userNumA < guess -5:
-                 print("So sad, too low!")
-    if prompt1 == 'C':
-        guess=random.randint(1,50)
-    userNumA=input("guess a number from 1-50 ")
-    while gameOn: 
-        userNumA=int(userNumA)
-        Counter = +1
-        if userNumA == guess:
-            print("Congratulations, you are smart")
-        else:
-            if userNumA > guess +10:
-                print("So sad, not so bright!")
-            else:
-                if userNumA < guess -10:
-                 print("So sad, too low!")
-    
+  if gametype== 3:
+    number = randint(1, 50) 
+while guessesTaken < 5:
+  print("You selected Level 1 (#1-50)")
+  print("                  ")
+  print('Take a guess')
+  print("                  ")
+  guess = int(input())  
+  guessesTaken = guessesTaken + 1 
+  if guess < number:
+    print("                  ")
+    print('So sad! Too low.')
+    print("                  ")
+  if guess > number:
+    print("                  ")
+    print('So sad! Too high')
+    print("                  ")
+  if guess == number:
+    break
+if guess == number:
+  guessesTaken = str(guessesTaken)
+  print("                  ")
+  print('Aight- Good job, ' + myName + '! You guessed the correct number in ' + guessesTaken + ' guesses!')
+if guess != number:
+  number = str(number)
+  print("                  ")
+  print('Dude- you suck. Get it together. The number that I was thinking is ' + number)
