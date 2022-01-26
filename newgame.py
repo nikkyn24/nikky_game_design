@@ -1,5 +1,4 @@
-import random
-import os
+from random import *
 guessesTaken = 0  
 print("##################")
 print("                  ")
@@ -12,7 +11,9 @@ print("  Level 1: #1-10  ")
 print("  Level 2: #1-30  ")
 print("  Level 3: #1-50  ")
 print("                  ")
-gametype= int(input('Hello, ' + myName + ', Select a level:'))
+print(" You will get less guesses according to the level difficulty")
+print("                  ")
+gametype= int(input('Select a level, you dummy:'))
 print("                  ")
 if gametype== 1:
     number = randint(1, 10) 
@@ -42,11 +43,11 @@ if guess != number:
   print("                  ")
   print('Dude- you suck. Get it together. The number that I was thinking is ' + number)
 
-if gametype== 2:
+elif gametype== 2:
     number = randint(1, 30) 
-while guessesTaken < 5:
+while guessesTaken < 4:
   print("                  ")
-  print("You selected Level 1 (#1-30)")
+  print("You selected Level 2 (#1-30)")
   print('Take a guess')
   print("                  ")
   guess = int(input())  
@@ -70,10 +71,10 @@ if guess != number:
   print("                  ")
   print('Dude- you suck. Get it together. The number that I was thinking is ' + number)
 
-  if gametype== 3:
+elif gametype== 3:
     number = randint(1, 50) 
-while guessesTaken < 5:
-  print("You selected Level 1 (#1-50)")
+while guessesTaken < 3:
+  print("You selected Level 3 (#1-50)")
   print("                  ")
   print('Take a guess')
   print("                  ")
