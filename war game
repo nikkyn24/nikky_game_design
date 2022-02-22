@@ -67,7 +67,7 @@ plyr1=0
 plyr2=0
 
 for i in range (0,halfDeck):
-    click=input("Press any key to get cards")
+    click=input("Hit enter to play")
     print("Player 1     Player 2")
     print("     "+player1[i]+"      "+player2[i])
     if player1[i]>player2[i]:
@@ -94,7 +94,7 @@ if player1[i]==player2[i]:
     print('|last placed cards are identical, again, there will be    |')
     print('|another war. Have Fun!|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|')
     print(' ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|                                  |')
-    click=input("Press any key to enter war")
+    click=input("Hit enter to begin war")
 print("Player 1     Player 2")
 print("     "+player1[i]+"      "+player2[i])
 print("     "+player1[i]+"      "+player2[i])
