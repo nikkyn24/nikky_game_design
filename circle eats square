@@ -1,0 +1,113 @@
+
+import os, time, random
+import pygame as pg
+import math
+
+pg.init()
+
+WIDTH = 700
+HEIGHT = 700
+x = 25
+y = 15
+xc = random.randint(50, WIDTH)
+yc = random.randint(50,HEIGHT)
+hbox = 20 #height
+wbox = 20 #width
+rad = 10 # radius
+ibox=rad*math.sqrt(2)
+x1= xc-ibox/2
+y1= yc-ibox/2
+inscSq=pg.Rect(x1,y1,ibox,ibox)
+
+check = True 
+square = pg.Rect(x, y, wbox, hbox)
+JUMP=False
+
+screen = pg.display.set_mode((WIDTH, HEIGHT))
+
+colors = {'red': [235, 64, 52], 'white': [255, 255, 255], 'blueish': [102, 153, 255], 'green': [0, 255, 0], 'orange': [230, 127, 9], 'hotpink': [230, 9, 215], 'blue': [9, 13, 230], 'cyan': [9, 193, 230], 'lime': [9, 219, 51], 'yellow': [240, 229, 81]}
+
+counter = 1
+while counter>10:
+background = colors.get('blueish')
+sq_color = colors.get('yellow')
+cr_color = colors.get('red')
+pg.display.set_caption("Circle Eats the Square")
+
+jumpCount=10
+COUNT=10
+
+while check:
+    screen.fill(background)
+    move = 7
+    for case in pg.event.get():
+        if case.type == pg.QUIT:
+            check = False
+    keys = pg.key.get_pressed()#get pressed keys
+
+    #square moves
+    if keys[pg.K_a] and square.x >= move:
+        square.x -= move
+    if keys[pg.K_d] and square.x <= WIDTH - (move+ wbox):
+        square.x += move
+
+    #JUMP CODE
+    if not JUMP:
+        if keys[pg.K_w] and square.y >= move:
+            square.y -= move
+        if keys[pg.K_s] and square.y <= HEIGHT - (move+ hbox):
+            square.y += move
+        if keys[pg.K_SPACE]:
+            JUMP=True
+    else:
+        if jumpCount >= -COUNT:
+            square.y -=jumpCount*abs(jumpCount)
+            jumpCount -=1
+        else:
+            jumpCount=COUNT
+            JUMP=False
+
+    if keys[pg.K_LEFT] and xc >= move:
+        xc -= move
+        inscSq.x -=move
+    if keys[pg.K_RIGHT] and xc <= HEIGHT - rad:
+        xc += move
+        inscSq.x +=move
+
+    if not JUMP:
+        if keys[pg.K_UP] and yc >= move:
+            yc -= move
+            inscSq.y -=move
+        if keys[pg.K_DOWN] and yc <= HEIGHT - rad:
+            yc += move
+            inscSq.y +=move
+        if keys[pg.K_m]:
+            JUMP=True
+    else:
+        if jumpCount >= -COUNT:
+            square.y -=jumpCount*abs(jumpCount)
+            jumpCount -=1
+        else:
+            jumpCount=COUNT
+            JUMP=False
+
+    crash=square.colliderect((inscSq))
+    if crash:
+        square.x = random.randint(50, WIDTH-wbox)
+        square.y = random.randint(50,HEIGHT-hbox)
+        rad +=move
+        ibox=rad*math.sqrt(2)
+        x1= xc-ibox/2
+        y1= yc-ibox/2
+        inscSq=pg.Rect(x1,y1,ibox,ibox)
+    pg.time.delay(12)
+
+    pg.draw.rect(screen,sq_color, square)
+    pg.draw.rect(screen,background, inscSq)
+    pg.draw.circle(screen,cr_color,(xc,yc), rad)
+    counter= counter +1
+    pg.display.update()
+    pg.time.delay(12)
+
+if counter>10:
+    loop=False
