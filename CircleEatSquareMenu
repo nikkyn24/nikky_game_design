@@ -1,0 +1,298 @@
+#Nikky Nandipati
+#4/5/22
+#Some help from 
+# https://www.youtube.com/watch?v=FfWpgLFMI7w&ab_channel=freeCodeCamp.org
+# https://www.youtube.com/watch?v=wkrXbl1RlAg&ab_channel=FHCoding
+
+import pygame as pg
+import random
+import time
+import os
+import datetime
+import math
+
+os.system('cls')
+
+name=input("Enter your name")
+
+pg.init()
+
+WIDTH=700
+HEIGHT=700
+wb=30
+hb=30
+xS=50
+yS=250
+
+MAIN=True
+INSTRUCTIONS=False
+SETTINGS=False
+LEV_I=False
+LEV_II=False
+LEV_III=False
+SCOREBOARD=False
+
+MenuList=['Instructions','Settings', "Level I","Level II",'Level II','Sscoreboard','Exit']
+SettingList=['Screen','Background','Circle','Square']
+loop=True 
+
+screen=pg.display.set_mode((WIDTH,HEIGHT))
+pg.display.set_caption('Circle Devours Square')
+
+colors={'white':[255,255,255], 'red':[255,0,0], 'aqua':[102,153, 255],
+'orange':[255,85,0],'purple':[48,25,52],'navy':[5,31,64],'pink':[200,3,75], 'crimson':[168,26,26], 'gray':[96,96,96], 'green':[43,255,171], 'black':[0,0,0] }
+background= colors.get('aqua')
+randColor=''
+cr_color=colors.get('crimson')
+sqM_color=colors.get('white')
+
+bigFont=pg.font.SysFont('comicsans', 75)
+mediumFont=pg.font.SysFont('comicsans', 35)
+littleFont=pg.font.SysFont('comicsans', 25)
+
+square=pg.Rect(xS,yS,wb,hb)
+
+def TitleMenu(Message):
+    text=bigFont.render(Message, 1, (255,0,0))
+    screen.fill((255,255,255))
+    xt=WIDTH/2-text.get_width()/2
+    screen.blit(text,(xt,50))
+
+def mainMenu(MenuList):
+    text=243
+    square.y=250
+    for i in range(len(MenuList)):
+        message=MenuList[i]
+        text=littleFont.render(message,1,(51,131,51))
+        screen.blit(text,(90,text))
+        pg.draw.rect(screen,sqM_color, square )
+        square.y +=50
+        text+=50
+    pg.display.update()
+    pg.time.delay(10)
+
+def colorChange():
+    global randColor
+    colorCheck=True
+    while colorCheck:
+        randColor=random.choice(list(colors))
+        if colors.get(randColor)==background:
+            print(randColor)
+            print(background)
+            randColor=random.choice(list(colors))
+        else:
+            colorCheck=False
+
+def instructions():
+    print("in instr")
+    myFile=open('CircleEatSquare\instructiones.txt', 'r')
+    yi=150
+    stuff= myFile.readlines()
+    print(stuff)
+    for line in stuff:
+        print(line)
+        text=littleFont.render(line, 1, colors.get('black'))
+        screen.blit(text, (40,yi))
+        pg.display.update()
+        pg.time.delay(50)
+        yi+=50
+    myFile.close()
+def score(SCOREBOARD):
+    date=datetime.datetime.now()
+    print(date.strftime('%m/%d/%Y'))
+    SCOREBOARDLine=str(SCOREBOARD)+"\t"+name+"\t"+date.strftime('%m/%d/%Y'+'\n')
+    myFile=open('CircleGameInstr.txt','a')
+    myFile.write(SCOREBOARDLine)
+    myFile.close()
+
+def action():
+    move=5 #pixels
+    xs=20
+    ys=20
+    wbox=30
+    hbox=30
+    rad=15
+    xc=random.randint(rad, WIDTH-rad)
+    yc=random.randint(rad, HEIGHT-rad)
+    ibox=int(rad*math.sqrt(2))
+    startpoint = (int(xc-ibox/2),int(yc-ibox/2))
+    print(startpoint[0]-ibox,startpoint[1])
+    insSquare=pg.Rect(startpoint[0],startpoint[1],ibox,ibox)
+    square=pg.Rect(xs,ys,wbox,hbox)
+    global MAIN
+    global LEV_I
+    startpoint = (int(xc-ibox/2),int(yc-ibox/2))
+    insSquare=pg.Rect(startpoint[0],startpoint[1],ibox,ibox)
+    sq_color=colors.get(randColor)
+    MAX=10
+    jumpCount=MAX
+    JUMP=False
+    run=True
+    while run:
+        screen.fill(background)
+        keys=pg.key.get_pressed()
+        for event in pg.event.get():
+            if event.type==pg.QUIT:
+                run=False
+                MAIN=True
+                LEV_I=False
+                print ("I want out", run)
+
+        if keys[pg.K_ESCAPE]:
+            run=False        
+        if keys[pg.K_a] and square.x >=move:
+                square.x -= move 
+        if keys[pg.K_d] and square.x <WIDTH-wbox:
+            square.x += move  
+        if not JUMP:
+            if keys[pg.K_w]:
+                square.y -= move
+            if keys[pg.K_s]:
+                square.y += move  
+            if keys[pg.K_SPACE]:
+                JUMP=True
+        else:
+            if jumpCount >=-MAX:
+                square.y -= jumpCount*abs(jumpCount)/2
+                jumpCount-=1
+            else:
+                jumpCount=MAX
+                JUMP=False 
+
+        if keys[pg.K_LEFT] and xc >=rad+move:
+            xc -= move 
+            insSquare.x -= move
+        if keys[pg.K_RIGHT] and xc <=WIDTH -(rad+move):
+            xc += move
+            insSquare.x += move
+        if keys[pg.K_DOWN] and yc <=HEIGHT-(rad+move):
+            yc += move 
+            insSquare.y += move
+        if keys[pg.K_UP] and yc >=rad+move:
+            yc -= move  
+            insSquare.y -= move
+           
+        choque = square.colliderect(insSquare)
+        if choque:
+            square.x=random.randint(wbox, WIDTH-wbox)
+            square.y=random.randint(hbox, HEIGHT-hbox)  
+            colorChange()
+            sq_color=colors.get(randColor)
+            rad +=move
+            ibox=int(rad*math.sqrt(2))
+            startpoint = (int(xc-ibox/2),int(yc-ibox/2))
+            insSquare=pg.Rect(startpoint[0],startpoint[1],ibox,ibox)
+
+        pg.draw.rect(screen, sq_color, square)
+        pg.draw.rect(screen,cr_color, insSquare )
+        pg.draw.circle(screen, cr_color, (xc,yc), rad)
+        pg.display.update()
+        pg.time.delay(10)
+
+colorChange()
+sq_color=colors.get(randColor)
+keys=pg.key.get_pressed()
+mouse_pos=(0,0) 
+
+banana=True
+while loop:
+    for case in pg.event.get():
+        if case.type==pg.QUIT:
+            loop=False
+        if case.type ==pg.MOUSEBUTTONDOWN:
+            mouse_pos=pg.mouse.get_pos()
+
+    keys=pg.key.get_pressed()
+    if MAIN:
+        screen.fill(background)
+        TitleMenu("MENU")
+        mainMenu(MenuList)
+        raw_input=()
+    if INSTRUCTIONS and banana:
+        screen.fill(background)
+        TitleMenu("INSTRUCTIONS")
+        instructions()
+        banana=False
+
+    if INSTRUCTIONS:
+        if keys[pg.K_ESCAPE]:
+            INST=False
+            MAIN=True
+            banana=False
+
+    if SETTINGS:
+        screen.fill(background)
+        TitleMenu("SETTINGS")
+        mainMenu(SettingList)
+        if keys[pg.K_ESCAPE]:
+            SETTINGS=False
+            MAIN=True
+
+    if LEV_I:
+        screen.fill(background)
+        action()
+        LEV_I=False
+        MAIN=True
+        mouse_pos=(0,0)
+
+    if LEV_II:
+        screen.fill(background)
+        TitleMenu("LEVEL 2")
+        if keys[pg.K_ESCAPE]:
+            LEV_II=False
+            MAIN=True
+
+    if LEV_III:
+        screen.fill(background)
+        TitleMenu("LEVEL 3")
+        if keys[pg.K_ESCAPE]:
+            LEV_III=False
+            MAIN=True
+
+    if SCOREBOARD:
+        screen.fill(background)
+        TitleMenu("SCOREBOARDBOARD")
+        if keys[pg.K_ESCAPE]:
+            SCOREBOARD=False
+            MAIN=True
+
+    if ((mouse_pos[0] >20 and mouse_pos[0] <80) and (mouse_pos[1] >250 and mouse_pos[1] <290))or INSTRUCTIONS :
+        MAIN=False
+        INSTRUCTIONS=True
+        
+    if ((mouse_pos[0] >20 and mouse_pos[0] <80) and (mouse_pos[1] >300 and mouse_pos[1] <330))or SETTINGS :
+        MAIN=False
+        SETTINGS=True
+
+    if ((mouse_pos[0] >20 and mouse_pos[0] <80) and (mouse_pos[1] >350 and mouse_pos[1] <380))or LEV_I :
+        MAIN=False
+        LEV_I=True  
+
+    if ((mouse_pos[0] >20 and mouse_pos[0] <80) and (mouse_pos[1] >400 and mouse_pos[1] <430))or LEV_II :
+        MAIN=False
+        LEV_II=True  
+
+    if ((mouse_pos[0] >20 and mouse_pos[0] <80) and (mouse_pos[1] >450 and mouse_pos[1] <480))or LEV_III :
+        MAIN=False
+        LEV_III=True  
+
+    if ((mouse_pos[0] >20 and mouse_pos[0] <80) and (mouse_pos[1] >500 and mouse_pos[1] <530))or SCOREBOARD :
+        MAIN=False
+        SCOREBOARD=True
+       
+    if ((mouse_pos[0] >20 and mouse_pos[0] <80) and (mouse_pos[1] >550 and mouse_pos[1] <580)) :
+        screen.fill(background)
+       
+        pg.display.update()
+        pg.time.delay(50)
+        MAIN=False
+        SCOREBOARD=False
+        pg.time.delay(3000)
+        loop=False
+
+    pg.display.update()
+    pg.time.delay(10)
+
+os.system('cls')
+pg.quit()
+
