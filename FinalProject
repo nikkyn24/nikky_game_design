@@ -53,24 +53,23 @@ pg.display.set_caption('ShapeStack')
 
 #define colors
 colors={'white':[255,255,255], 'red':[255,0,0], 'aqua':[102,153, 255],
-'orange':[255,85,0],'purple':[48,25,52],'navy':[5,31,64],'pink':[200,3,75]}
+'orange':[255,85,0],'purple':[48,25,52],'blue':[175,166, 247],'pink':[200,3,75], 'electric':[2,27,245],}
 #Get colors
-background= colors.get('white')
+background= (175,166,247)
 randColor=''
-cr_color=colors.get('aqua')
-sqM_color=colors.get('pink')
+sqM_color=(2,27,245)
 BLACK=(0,0,0)
 #create fifferent type 
-TITLE_FNT=pg.font.SysFont('comicsans', 80)
-MENU_FNT=pg.font.SysFont('comicsans', 40)
-INST_FNT=pg.font.SysFont('comicsans', 30)
+TITLE_FNT=pg.font.SysFont('aharoni', 100)
+MENU_FNT=pg.font.SysFont('aharoni', 60)
+INST_FNT=pg.font.SysFont('aharoni', 50)
 #Create square fr menu
 
 squareM=pg.Rect(xMs,yMs,wb,hb)
 #Create Title
 def TitleMenu(Message):
-    text=TITLE_FNT.render(Message, 1, (255,0,0))
-    screen.fill((255,255,255))
+    text=TITLE_FNT.render(Message, 1, (2, 27, 245))
+    screen.fill((background))
     #get the width  the text 
     #x value = WIDTH/2 - wText/2
     xt=s_width/2-text.get_width()/2
@@ -81,7 +80,7 @@ def MainMenu(Mlist):
     squareM.y=250
     for i in range(len(Mlist)):
         message=Mlist[i]
-        text=INST_FNT.render(message,1,(51,131,51))
+        text=INST_FNT.render(message,1,(255,255,255))
         screen.blit(text,(90,txty))
         pg.draw.rect(screen,sqM_color, squareM )
         squareM.y +=50
@@ -102,20 +101,21 @@ def instr():
     screen.blit(txt, (xt,320)) 
     txt=INST_FNT.render("The shapes will start to fall faster in each level,",1, (5, 31, 64))
     screen.blit(txt, (xt,360)) 
-    txt=INST_FNT.render("and you can earn 5 points for every line you clear,",1, (5, 31, 64))
+    txt=INST_FNT.render("and if you clear a line, you will get 5 points,",1, (5, 31, 64))
     screen.blit(txt, (xt,360)) 
 
+#function creating string for the score and then writing in file
 def keepScore(score):
     date=datetime.datetime.now()
     print(date.strftime('%m/%d/%Y'))
     scoreLine=str(score)+"/t"+name+"/t"+date.strftime('%m/%d/%Y'+'/n')
- 
     #open a file and write in it 
     # when y write it erases the prev 
     myFile=open('C:/Users/nandipatin24/Documents/nikky_game_design/ShapeStack/scoreboard.txt','a') 
     myFile.write(scoreLine)
     myFile.close()
 
+#function for reading scoreboard lines
 def scoreBoard():
     myFile=open('C:/Users/nandipatin24/Documents/nikky_game_design/ShapeStack/scoreboard.txt', 'r')
     yi=150
@@ -127,37 +127,20 @@ def scoreBoard():
     j=0
     for i in range(N, -1, -1):
         print(i,stuff[i])
-        # temp[j]=stuff[i]
-        #     j +=1
-        # print(temp)
-        # for i in range(N):
-        #     text=INST_FNT.render(temp[i], 1, BLACK)
-        #     screen.blit(text, (40,yi))
-        #     pg.display.update()
-        #     pg.time.delay(50)
-        #     yi+=50
-    
-def keepScore(score):
-    date=datetime.datetime.now()
-    print(date.strftime('%m/%d/%Y'))
-    scoreLine=str(score)+"/"+name+"/"+date.strftime('%m/%d/%Y'+'/')
-    print (scoreLine)
-    #open file and write in it
-    myFile=open('Class Stuff/CircleEatsSquare/ScrBrd.txt', 'a')
-    myFile.write(scoreLine)
-    myFile.close()
 
+#function to display scoreboard lines from file onto pygame screen
 def displayScoreboard():
     height = 170
-    myScoreboard=open('C:/Users/nandipatin24/Documents/nikky_game_design/ShapeStack/scoreboard.txt','r') #opens the file
+    myScoreboard=open('C:/Users/nandipatin24/Documents/nikky_game_design/Final Project/scoreboard.txt','r') #opens the file
     for line in myScoreboard.readlines():   #Reads the file and prints each letter on the screen
-        text = INST_FNT.render(line,1,(255,0,0))
+        text = INST_FNT.render(line,1,(175,166,247))
         gameScreen.blit(text, (s_width/2-text.get_width()/2,height))
         pg.display.update()
         pg.time.delay(100)
         height+=60
     myScoreboard.close()
 
+#function for establishing screen size for game
 def screenSize(xm,ym):
     global HEIGHT, WIDTH, screen
     if ((xm >20 and xm <80) and (ym >250 and ym <290)):
@@ -174,8 +157,9 @@ def screenSize(xm,ym):
     screen=pg.display.set_mode((WIDTH,HEIGHT))
 
 gameScreen = pg.display.set_mode((s_width, s_height))
-pg.display.set_caption('ShapeStack')
+pg.image.load("C:/Users/nandipatin24/OneDrive - Greenhill School/Game Design 10/Picture1.png")
 
+#establishing the shapes
 S = [['.....',
       '.....',
       '..00.',
@@ -278,12 +262,13 @@ T = [['.....',
       '..0..',
       '.....']]
 
+#index for the shapes
 shapes = [S, Z, I, O, J, L, T]
 shape_colors = [(0, 255, 0), (255, 0, 255), (0, 255, 255),
                 (255, 255, 0), (255, 165, 0), (0, 0, 255),
                 (128, 0, 128)]
 
-
+#organizing each shape into classes
 class shape(object):
     rows = 20
     columns = 10
@@ -295,7 +280,7 @@ class shape(object):
         self.color = shape_colors[shapes.index(shape)]
         self.rotation = 0
 
-
+#generates the grid for the in game screen
 def create_grid(locked_positions={}):
     grid = [[(0, 0, 0) for x in range(10)] for x in range(20)]
 
@@ -322,8 +307,8 @@ def convert_shape_format(shape):
 
     return positions
 
-
-def valid_space(shape, grid):
+# ensures that all the shapes are working properly (valid)
+def proper_space(shape, grid):
     accepted_positions = [[(j, i) for j in range(10) if grid[i][j] == (0, 0, 0)] for i in range(20)]
     accepted_positions = [j for sub in accepted_positions for j in sub]
     formatted = convert_shape_format(shape)
@@ -335,7 +320,7 @@ def valid_space(shape, grid):
 
     return True
 
-
+#ensures that all pieces are within the board and not out of limits
 def check_lost(positions):
     for pos in positions:
         x, y = pos
@@ -343,21 +328,21 @@ def check_lost(positions):
             return True
     return False
 
-
+#randomly selects a shape, calling back from index
 def get_shape():
     global shapes, shape_colors
 
     return shape(5, 0, random.choice(shapes))
 
-
+# creates the necessary text
 def draw_text_middle(text, size, color, surface):
-    font = pg.font.SysFont('comicsans', size, bold=True)
+    font = pg.font.SysFont('aharoni', size, bold=True)
     label = font.render(text, 1, color)
 
     surface.blit(label, (
         top_left_x + play_width / 2 - (label.get_width() / 2), top_left_y + play_height / 2 - label.get_height() / 2))
 
-
+# establishes the grid lines for the game screen
 def draw_grid(surface, row, col):
     sx = top_left_x
     sy = top_left_y
@@ -368,7 +353,7 @@ def draw_grid(surface, row, col):
             pg.draw.line(surface, (128, 128, 128), (sx + j * 30, sy),
                              (sx + j * 30, sy + play_height))  # vertical lines
 
-
+# allows a row to clear when full
 def clear_rows(grid, locked):
     inc = 0
     for i in range(len(grid) - 1, -1, -1):
@@ -388,9 +373,9 @@ def clear_rows(grid, locked):
                 newKey = (x, y + inc)
                 locked[newKey] = locked.pop(key)
 
-
-def draw_next_shape(shape, surface):
-    font = pg.font.SysFont('comicsans', 30)
+# shows the next shape when playing before it drops
+def draw_upcoming_shape(shape, surface):
+    font = pg.font.SysFont('aharoni', 30)
     label = font.render('Next Shape', 1, (255, 255, 255))
 
     sx = top_left_x + play_width + 50
@@ -404,20 +389,25 @@ def draw_next_shape(shape, surface):
                 pg.draw.rect(surface, shape.color, (sx + j * 30, sy + i * 30, 30, 30), 0)
     surface.blit(label, (sx + 10, sy - 30))
 
+titlePic=pg.image.load("C:/Users/nandipatin24/OneDrive - Greenhill School/Game Design 10/Picture1.png")
+titlePic=pg.transform.scale(titlePic,(550,200))
 
+# loads the title game logo for the game screen
 def draw_window(surface):
     surface.fill((0, 0, 0))
-    font = pg.font.SysFont('comicsans', 60)
-    label = font.render('ShapeStack', 1, (255, 255, 255))
+    pg.image.load("C:/Users/nandipatin24/OneDrive - Greenhill School/Game Design 10/Picture1.png")
 
-    surface.blit(label, (top_left_x + play_width / 2 - (label.get_width() / 2), 30))
+    
+
+    surface.blit(titlePic, (top_left_x + play_width / 2 - (titlePic.get_width() / 2), 30))
 
     for i in range(len(grid)):
         for j in range(len(grid[i])):
             pg.draw.rect(surface, grid[i][j], (top_left_x + j * 30, top_left_y + i * 30, 30, 30), 0)
 
     draw_grid(surface, 20, 10)
-    
+
+#loop for the game   
 def playGame():
     global grid
 
@@ -438,10 +428,10 @@ def playGame():
         fall_time += clock.get_rawtime()
         clock.tick()
 
-        if fall_time / 1000 >= fall_speed:
+        if fall_time / 1000 >= gravity:
             fall_time = 0
             current_shape.y += 1
-            if not (valid_space(current_shape, grid)) and current_shape.y > 0:
+            if not (proper_space(current_shape, grid)) and current_shape.y > 0:
                 current_shape.y -= 1
                 change_shape = True
 
@@ -454,25 +444,25 @@ def playGame():
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_LEFT:
                     current_shape.x -= 1
-                    if not valid_space(current_shape, grid):
+                    if not proper_space(current_shape, grid):
                         current_shape.x += 1
 
                 elif event.key == pg.K_RIGHT:
                     current_shape.x += 1
-                    if not valid_space(current_shape, grid):
+                    if not proper_space(current_shape, grid):
                         current_shape.x -= 1
                 elif event.key == pg.K_UP:
                     current_shape.rotation = current_shape.rotation + 1 % len(current_shape.shape)
-                    if not valid_space(current_shape, grid):
+                    if not proper_space(current_shape, grid):
                         current_shape.rotation = current_shape.rotation - 1 % len(current_shape.shape)
 
                 if event.key == pg.K_DOWN:
                     current_shape.y += 1
-                    if not valid_space(current_shape, grid):
+                    if not proper_space(current_shape, grid):
                         current_shape.y -= 1
 
                 if event.key == pg.K_SPACE:
-                    while valid_space(current_shape, grid):
+                    while proper_space(current_shape, grid):
                         current_shape.y += 1
                     current_shape.y -= 1
                     print(convert_shape_format(current_shape))
@@ -494,7 +484,7 @@ def playGame():
             clear_rows(grid, locked_positions)
 
         draw_window(gameScreen)
-        draw_next_shape(next_shape, gameScreen)
+        draw_upcoming_shape(next_shape, gameScreen)
         pg.display.update()
 
         if check_lost(locked_positions):
@@ -502,8 +492,9 @@ def playGame():
         
         if clear_rows(grid, locked_positions):
                 score += 5
+                keepScore()
 
-    draw_text_middle("You Lost", 40, (255, 255, 255), gameScreen)
+    draw_text_middle("Get it together. You suck.", 40, (255, 255, 255), gameScreen)
 
     pg.display.update()
     pg.time.delay(2000)
@@ -556,7 +547,7 @@ while check:
             MAIN=True
             f_SEET=True
     if LEV_I:
-        fall_speed = 0.27
+        gravity = 0.27
         playGame()
         if keys[pg.K_ESCAPE]:
             LEV_I=False
@@ -564,13 +555,13 @@ while check:
             xm=0
             ym=0
     if LEV_II:
-        fall_speed = 0.17
+        gravity = 0.17
         playGame()
         if keys[pg.K_ESCAPE]:
             LEV_II=False
             MAIN=True
     if LEV_III:
-        fall_speed = 0.1
+        gravity = 0.1
         playGame()
         if keys[pg.K_ESCAPE]:
             LEV_III=False
