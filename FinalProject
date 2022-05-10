@@ -555,13 +555,13 @@ while check:
             xm=0
             ym=0
     if LEV_II:
-        gravity = 0.17
+        gravity = 0.15
         playGame()
         if keys[pg.K_ESCAPE]:
             LEV_II=False
             MAIN=True
     if LEV_III:
-        gravity = 0.1
+        gravity = 0.08
         playGame()
         if keys[pg.K_ESCAPE]:
             LEV_III=False
@@ -622,13 +622,10 @@ while check:
             set_first=True
     if ((xm >20 and xm <80) and (ym >550 and ym <580)) :
         screen.fill(background)
-        keepScore(121)
-        text=INST_FNT.render("Make sure you update the score file", 1, BLACK)
-        screen.blit(text, (40,200))
-        text=INST_FNT.render("before you exit", 1, BLACK)
-        screen.blit(text, (40,300))
-        text=INST_FNT.render("Thank you for playing", 1, BLACK)
-        screen.blit(text, (40,400))
+        keepScore(score)
+        text=INST_FNT.render("Hasta La Vista", 1, BLACK)
+        screen.blit(text, (270,250))
+
         pg.display.update()
         pg.time.delay(50)
         MAIN=False
