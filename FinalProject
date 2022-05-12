@@ -3,21 +3,22 @@
 #GameDesignCBlock
 
 #Credits/References:
-#Aarian Dhanani:
+#Ms. Suarez: 
 #TechWithTim: https://www.techwithtim.net/tutorials/game-development-with-python/tetris-pygame/tutorial-1/ (video series)
 #KidsCanCode: https://www.youtube.com/watch?v=MFv1Ew_nGG0&ab_channel=KidsCanCode
 #StackOverflow: https://stackoverflow.com/questions/70990741/falling-objects-game-in-pygame
 
 import pygame as pg
 import os, random, time, math, datetime
-from turtle import delay, screensize
+from turtle import screensize
 os.system('cls')
 name=input("Enter name: ")
-#initialize pg
+
+#initialize pygame
 pg.init()
 
 #Declare constants, variables, list, dictionaries, any object
-#scree size
+#screen size
 s_width=800
 s_height=800
 play_width=300
@@ -40,7 +41,12 @@ LEV_II=False
 LEV_III=False
 SCORE=False
 
-
+#List f messages
+MenuList=['Instructions','Settings', "Level I","Level II",'Level III','Scoreboard','Exit']
+SettingList=['Screen Size']
+sizeList=['1000 x 1000','950 x 950','900 x 900']
+check=True #for the while loop
+score=0
 
 #create screen
 screen=pg.display.set_mode((s_width,s_height))
@@ -53,29 +59,7 @@ colors={'white':[255,255,255], 'red':[255,0,0], 'aqua':[102,153, 255],
 background= (175,166,247)
 randColor=''
 sqM_color=(2,27,245)
-
-#List f messages
-MenuList=['Instructions','Settings', "Level I","Level II",'Level III','LEADERBOARD','Exit']
-SettingList=['Screen Size','Background Color']
-backColor=[colors.get('white'), colors.get('aqua'), colors.get('orange'), colors.get('magenta')]
-sizeList=['1000 x 1000','950 x 950','900 x 900']
-check=True #for the while loop
-
-score=0
-
-randColor=''
-def changeClr():
-    global randColor
-    colorCheck=True
-    while colorCheck:
-        randColor=random.choice(list(colors))
-        if colors.get(randColor) == background:
-            randColor=random.choice(list(colors))
-        else:
-            colorCheck=False
-changeClr()
-squareColor=colors.get(randColor)    
-
+BLACK=(0,0,0)
 #create fifferent type 
 TITLE_FNT=pg.font.SysFont('aharoni', 100)
 MENU_FNT=pg.font.SysFont('aharoni', 60)
@@ -93,21 +77,21 @@ def TitleMenu(Message):
     screen.blit(text,(xt,50))
 #This is a function uses a parameter
 def MainMenu(Mlist):
-    txty=245
+    txty=243
     squareM.y=250
     for i in range(len(Mlist)):
         message=Mlist[i]
-        text=INST_FNT.render(message,1,(colors.get('white')))
+        text=INST_FNT.render(message,1,(255,255,255))
         screen.blit(text,(90,txty))
-        pg.draw.rect(screen,sqM_color, squareM)
+        pg.draw.rect(screen,sqM_color, squareM )
         squareM.y +=50
         txty+=50
     pg.display.update()
     pg.time.delay(10)
 
-def instr(): 
-     
-    txt=INST_FNT.render("Stack up as many shapes as you can before",1, (5,31, 64))
+#function to create instructions text
+def instr():     
+    txt=INST_FNT.render("Stack up as many shapes as you can before", 1,(5, 31, 64))
     xt= s_width/2-txt.get_width()/2
     screen.blit(txt,(xt,200))
     txt=INST_FNT.render("you reach the top of the line. Try to arrange", 1, (5, 31, 64)) 
@@ -119,22 +103,22 @@ def instr():
     txt=INST_FNT.render("The shapes will start to fall faster in each level,",1, (5, 31, 64))
     screen.blit(txt, (xt,360)) 
     txt=INST_FNT.render("and if you clear a line, you will get 5 points,",1, (5, 31, 64))
-    screen.blit(txt, (xt,400)) 
+    screen.blit(txt, (xt,360)) 
 
-#function creating string for the score and then writing in file
+
+#function to create string for the score and then write in file
 def keepScore(score):
     date=datetime.datetime.now()
     scoreLine=str(score)+"/t"+name+"/t"+date.strftime('%m/%d/%Y'+'/n')
     #open a file and write in it 
     # when y write it erases the prev 
-    myFile=open('Final Project\LEADERBOARD.txt','w') 
+    myFile=open('Final Project\leaderboard.txt','w') 
     myFile.write(scoreLine)
-    
     myFile.close()
 
-#function for reading LEADERBOARD lines
-def leaderBoard():
-    myFile=open('Final Project\LEADERBOARD.txt', 'r')
+#function for reading scoreboard lines
+def scoreBoard():
+    myFile=open('Final Project\leaderboard.txt', 'r')
     yi=150
     stuff= myFile.readlines()
     myFile.close()
@@ -145,35 +129,34 @@ def leaderBoard():
         yi+=50
         pg.time.delay(10)
 
-#function for establishing screen size for game
+#function for establishing screen size 
 def screenSize(xm,ym):
     global HEIGHT, WIDTH, screen
     if ((xm >20 and xm <80) and (ym >250 and ym <290)):
         HEIGHT=1000
         WIDTH=1000
-
     if ((xm >20 and xm <80) and (ym >300 and ym <330)):
         HEIGHT=950
-        WIDTH=950
-        
+        WIDTH=950       
     if ((xm >20 and xm <80) and (ym >350 and ym <380)):
         HEIGHT=900
         WIDTH=900
     screen=pg.display.set_mode((WIDTH,HEIGHT))
 
+#variable for screen for actual game itself
 gameScreen = pg.display.set_mode((s_width, s_height))
 pg.image.load("C:/Users/nandipatin24/OneDrive - Greenhill School/Game Design 10/Picture1.png")
 
 #establishing the shapes
-S = [['00000',
-      '00000',
-      '00000',
-      '00000',
-      '00000'],
-     ['.....',
-      '.00..',
-      '.000.',
+S = [['.....',
+      '.....',
       '..00.',
+      '.00..',
+      '.....'],
+     ['.....',
+      '..0..',
+      '..00.',
+      '...0.',
       '.....']]
 
 Z = [['.....',
@@ -273,11 +256,11 @@ shape_colors = [(0, 255, 0), (255, 0, 255), (0, 255, 255),
                 (255, 255, 0), (255, 165, 0), (0, 0, 255),
                 (128, 0, 128)]
 
-#organizing each shape into classes
+#organizing each shape into different classes
 class shape(object):
     rows = 20
     columns = 10
-
+    #initiates the classes, seperates by features
     def __init__(self, column, row, shape):
         self.x = column
         self.y = row
@@ -296,36 +279,33 @@ def create_grid(locked_positions={}):
                 grid[i][j] = c
     return grid
 
-
+#writes the shape and establishes the position/rotation
 def convert_shape_format(shape):
     positions = []
     format = shape.shape[shape.rotation % len(shape.shape)]
-
     for i, line in enumerate(format):
         row = list(line)
         for j, column in enumerate(row):
             if column == '0':
                 positions.append((shape.x + j, shape.y + i))
-
     for i, pos in enumerate(positions):
         positions[i] = (pos[0] - 2, pos[1] - 4)
-
     return positions
 
-# ensures that all the shapes are working properly (valid)
+#ensures that all the shapes are working properly (valid)
 def proper_space(shape, grid):
     accepted_positions = [[(j, i) for j in range(10) if grid[i][j] == (0, 0, 0)] for i in range(20)]
     accepted_positions = [j for sub in accepted_positions for j in sub]
-    formatted = convert_shape_format(shape)
-
-    for pos in formatted:
+    accurate = convert_shape_format(shape)
+    #ensures the above function
+    for pos in accurate:
         if pos not in accepted_positions:
             if pos[1] > -1:
                 return False
-
     return True
 
-#ensures that all pieces are within the board and not out of limits
+#ensures that all shapes are within the game screen and not over position of limit
+#(this is what terminates the game if the piece crosses the limat; in the game if it goes above the line)
 def check_lost(positions):
     for pos in positions:
         x, y = pos
@@ -336,10 +316,9 @@ def check_lost(positions):
 #randomly selects a shape, calling back from index
 def get_shape():
     global shapes, shape_colors
-
     return shape(5, 0, random.choice(shapes))
 
-# creates the necessary text
+#creates the necessary text
 def draw_text_middle(text, size, color, surface):
     font = pg.font.SysFont('aharoni', size, bold=True)
     label = font.render(text, 1, color)
@@ -358,7 +337,7 @@ def draw_grid(surface, row, col):
             pg.draw.line(surface, (128, 128, 128), (sx + j * 30, sy),
                              (sx + j * 30, sy + play_height))  # vertical lines
 
-# allows a row to clear when full
+#allows a row to clear when full
 def clear_rows(grid, locked):
     inc = 0
     for i in range(len(grid) - 1, -1, -1):
@@ -378,7 +357,7 @@ def clear_rows(grid, locked):
                 newKey = (x, y + inc)
                 locked[newKey] = locked.pop(key)
 
-# shows the next shape when playing before it drops
+#shows the next shape when playing before it drops
 def draw_upcoming_shape(shape, surface):
     font = pg.font.SysFont('aharoni', 30)
     label = font.render('Next Shape', 1, (255, 255, 255))
@@ -394,6 +373,7 @@ def draw_upcoming_shape(shape, surface):
                 pg.draw.rect(surface, shape.color, (sx + j * 30, sy + i * 30, 30, 30), 0)
     surface.blit(label, (sx + 10, sy - 30))
 
+#loads image logo
 titlePic=pg.image.load("C:/Users/nandipatin24/OneDrive - Greenhill School/Game Design 10/Picture1.png")
 titlePic=pg.transform.scale(titlePic,(550,200))
 
@@ -428,14 +408,10 @@ def playGame():
 
     while run:
         
+
         grid = create_grid(locked_positions)
         fall_time += clock.get_rawtime()
         clock.tick()
-
-        if clear_rows(grid, locked_positions):
-                score += 5
-                print(score)
-                keepScore()
 
         if fall_time / 1000 >= gravity:
             fall_time = 0
@@ -499,7 +475,9 @@ def playGame():
         if check_lost(locked_positions):
             run = False
         
-
+        if clear_rows(grid, locked_positions):
+                score += 5
+                keepScore()
 
     draw_text_middle("Get it together. You suck.", 40, (255, 255, 255), gameScreen)
 
@@ -517,7 +495,6 @@ xm=0
 ym=0
 f_SEET=True
 sc_size=False
-back_clr=False
 set_first=True
 c_first=True
 while check:
@@ -555,7 +532,7 @@ while check:
             MAIN=True
             f_SEET=True
     if LEV_I:
-        gravity = 0.27
+        gravity = 0.24
         playGame()
         if keys[pg.K_ESCAPE]:
             LEV_I=False
@@ -563,21 +540,20 @@ while check:
             xm=0
             ym=0
     if LEV_II:
-        gravity = 0.15
+        gravity = 0.13
         playGame()
         if keys[pg.K_ESCAPE]:
             LEV_II=False
             MAIN=True
     if LEV_III:
-        gravity = 0.08
+        gravity = 0.06
         playGame()
         if keys[pg.K_ESCAPE]:
             LEV_III=False
             MAIN=True
     if SCORE and screCk:
         screen.fill(background)
-        TitleMenu("Leaderboard")
-        leaderBoard()
+        TitleMenu("SCOREBOARD")
         #call funct t print scres
         screCk=False
     if SCORE:
@@ -606,7 +582,7 @@ while check:
     if ((xm >20 and xm <80) and (ym >250 and ym <290)) and SETT and set_first:  
         screen.fill(background)
         TitleMenu("Screen Size")
-        MainMenu(sizeList)
+        MainMenu(sizeList )
         sc_size=True
         set_first=False
         f_SEET=True
@@ -621,24 +597,17 @@ while check:
         if keys[pg.K_ESCAPE]:
             sc_size=False
             set_first=True
-    if ((xm >20 and xm <80) and (ym >300 and ym <330)) and SETT and c_first:
+    if ((xm >20 and xm <80) and (ym >300 and ym <330))and SETT and c_first:
         screen.fill(background)
         TitleMenu("Background Color")
-
-        sc_size=True
-        set_first=False
-        f_SEET=True
-        if keys[pg.K_ESCAPE]:
-            sc_size=False
-            set_first=True
-
+        c_first=False
         if keys[pg.K_ESCAPE]:
             c_first=True
             set_first=True
     if ((xm >20 and xm <80) and (ym >550 and ym <580)) :
         screen.fill(background)
         keepScore(score)
-        text=INST_FNT.render("Hasta La Vista", 1, (0,0,0))
+        text=INST_FNT.render("Hasta La Vista", 1, BLACK)
         screen.blit(text, (270,250))
 
         pg.display.update()
